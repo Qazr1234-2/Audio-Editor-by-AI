@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qazr 音频剪辑软件</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="aurora"><i></i><i></i><i></i></div>
+
+<div class="app">
+
+  <!-- ============================ 顶栏 ============================ -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark">Q</div>
+      <div class="txt">
+        <h1>Qazr 音频剪辑软件</h1>
+        <p><b>打压一切付费同行</b>，让所有人能用上免费好用的工具</p>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <button class="btn" id="btnImport" title="导入音频或视频文件，视频自动提取音轨 (Ctrl+O)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/>
+      </svg>
+      导入音频 / 视频
+    </button>
+
+    <button class="btn icon ghost" id="btnUndo" title="撤销 (Ctrl+Z)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>
+      </svg>
+    </button>
+    <button class="btn icon ghost" id="btnRedo" title="重做 (Ctrl+Y)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/>
+      </svg>
+    </button>
+    <button class="btn icon ghost" id="btnTheme" title="切换明暗主题">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>
+      </svg>
+    </button>
+
+    <button class="btn primary" id="btnExport" title="导出音频 (Ctrl+E)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M4 21h16"/>
+      </svg>
+      导出
+    </button>
+  </header>
+
+  <!-- ============================ 工具条 ============================ -->
+  <div class="toolbar">
+    <div class="btn-group" id="transport">
+      <button class="seg" id="btnStart" title="回到开头 (Home)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 20 9 12l10-8z"/><path d="M5 19V5"/>
+        </svg>
+      </button>
+      <button class="seg" id="btnPlay" title="播放 / 暂停 (空格)">
+        <svg id="icoPlay" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+          <path d="M8 5.5v13a1 1 0 0 0 1.5.87l11-6.5a1 1 0 0 0 0-1.74l-11-6.5A1 1 0 0 0 8 5.5Z"/>
+        </svg>
+        <span id="txtPlay">播放</span>
+      </button>
+      <button class="seg" id="btnStop" title="停止 (Esc)">
+        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+          <rect x="6" y="6" width="12" height="12" rx="2.5"/>
+        </svg>
+      </button>
+      <button class="seg" id="btnEnd" title="跳到结尾 (End)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m5 4 10 8-10 8z"/><path d="M19 5v14"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="timecode" id="timecode">00:00.000<small>/ 00:00.000</small></div>
+
+    <div class="tool-sep"></div>
+
+    <div class="btn-group" id="tools">
+      <button class="seg on" id="toolSelect" title="选择 / 移动 (V)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 3l7 17 2.5-6.5L20 11z"/>
+        </svg>
+        选择
+      </button>
+      <button class="seg" id="toolSplit" title="切割 (S)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/>
+        </svg>
+        切割
+      </button>
+    </div>
+
+    <button class="btn" id="btnAddTrack" title="新增音轨">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      新增音轨
+    </button>
+
+    <button class="btn icon ghost" id="btnPanic" title="清空全部音轨">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/>
+      </svg>
+    </button>
+
+    <div class="tool-sep"></div>
+
+    <label class="switch" title="拖动时吸附到播放头与其他片段边缘">
+      <input type="checkbox" id="chkSnap" checked>
+      <span class="track"></span>
+      吸附
+    </label>
+
+    <div class="tool-sep"></div>
+
+    <span class="tool-label">缩放</span>
+    <input type="range" class="slider" id="zoomSlider" min="0" max="100" value="34" step="1">
+    <button class="btn icon ghost" id="btnFit" title="适应窗口">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>
+      </svg>
+    </button>
+
+    <div class="spacer"></div>
+
+    <span class="tool-label">主音量</span>
+    <input type="range" class="slider" id="masterVol" min="0" max="1.5" value="1" step="0.01">
+  </div>
+
+  <!-- ============================ 主区域 ============================ -->
+  <div class="main" data-inspector="true">
+    <div class="stage">
+      <div class="tl-scroll" id="tlScroll">
+        <div class="tl-inner" id="tlInner">
+          <div class="ruler-row">
+            <div class="ruler-corner">时间轴 · 5 轨</div>
+            <div class="ruler" id="ruler"><canvas id="rulerCanvas"></canvas></div>
+          </div>
+          <div class="tracks" id="tracks"></div>
+          <div class="playhead" id="playhead"><div class="grip" id="phGrip"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="inspector" id="inspector">
+      <div class="insp-body" id="inspBody"></div>
+    </aside>
+  </div>
+
+  <!-- ============================ 状态栏 ============================ -->
+  <footer class="statusbar">
+    <span class="pill"><i></i><span id="stSample">—</span></span>
+    <span id="stDuration">总时长 00:00.000</span>
+    <span id="stClips">0 个片段</span>
+    <span class="spacer"></span>
+    <span id="stHint">把音频文件拖进窗口即可导入 · 空格播放 · 按住 Alt 拖动片段可关闭吸附</span>
+  </footer>
+</div>
+
+<!-- ============================ 拖拽导入 ============================ -->
+<div class="dropzone" id="dropzone"><div class="box">松开鼠标 · 导入音频 / 视频</div></div>
+
+<!-- ============================ 导出弹窗 ============================ -->
+<div class="mask" id="exportMask">
+  <div class="modal">
+    <h3>导出</h3>
+    <p class="sub">离线渲染全部音轨并混音，输出格式可选。</p>
+    <div class="body">
+      <div class="field">
+        <div class="lbl">格式</div>
+        <div id="expFmtSlot"></div>
+      </div>
+      <div class="grid2">
+        <div class="field" id="expDepthField">
+          <div class="lbl">位深</div>
+          <div id="expDepthSlot"></div>
+        </div>
+        <div class="field" id="expRateField">
+          <div class="lbl">采样率</div>
+          <div id="expRateSlot"></div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field" id="expKbpsField">
+          <div class="lbl">码率</div>
+          <div id="expKbpsSlot"></div>
+        </div>
+        <div class="field">
+          <div class="lbl">声道</div>
+          <div id="expChSlot"></div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="expNormalize" checked>
+        <span class="track"></span>
+        峰值归一化到 -1 dBFS
+      </label>
+      <div class="field">
+        <div class="lbl">文件名</div>
+        <input class="input" id="expName" value="Qazr-混音导出">
+      </div>
+      <div class="progress"><i id="expBar"></i></div>
+      <div class="hint" id="expHint">导出为无损 WAV，可直接用于后期与发布。</div>
+    </div>
+    <div class="foot">
+      <button class="btn ghost" id="btnExpCancel">取消</button>
+      <button class="btn primary" id="btnExpGo">开始导出</button>
+    </div>
+  </div>
+</div>
+
+<div class="busy-mask" id="busyMask">
+  <div class="card"><span class="spinner"></span><span id="busyText">正在处理音频…</span></div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<input type="file" id="fileInput" accept="audio/*,video/*,.wav,.wave,.mp3,.ogg,.oga,.opus,.flac,.m4a,.aac,.weba,.mp4,.m4v,.mov,.webm,.mkv,.ogv,.ts,.3gp" multiple hidden>
+
+<script src="js/dsp.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/codec.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
